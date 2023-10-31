@@ -19,10 +19,22 @@ function Logo() {
   return <h1>🚀 Far Away (●'◡'●)</h1>;
 }
 function Form() {
+  function handleSubmit(e) {
+    e.preventDefault();
+  }
   return (
-    <div className="add-form">
+    <form className="add-form" onSubmit={handleSubmit}>
       <h3>What do you need for you 😍 trip?</h3>
-    </div>
+      <select>
+        {Array.from({ length: 20 }, (_, i) => i + 1).map((num) => (
+          <option value={num} key={num}>
+            {num}
+          </option>
+        ))}
+      </select>
+      <input type="text" placeholder="Item..." />
+      <button>Add</button>
+    </form>
   );
 }
 function PackingList() {
