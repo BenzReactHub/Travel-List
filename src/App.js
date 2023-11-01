@@ -12,7 +12,7 @@ export default function App() {
     <div className="app">
       <Logo />
       <Form setItems={setItems} />
-      <PackingList items={items} />
+      <PackingList items={items} setItems={setItems}/>
       <Stats />
     </div>
   );
@@ -31,7 +31,7 @@ function Form({ setItems }) {
     if (!description) return;
     const newItem = { description, quantity, packed: false, id: Date.now() };
     // console.log(newItem);
-    setItems((items) => [...items, newItem]);
+    setItems((prevItems) => [...prevItems, newItem]);
 
     setDescription("");
     setQuantity(1);
@@ -63,25 +63,30 @@ function Form({ setItems }) {
     </form>
   );
 }
-function PackingList({ items }) {
+function PackingList({ items, setItems }) {
   return (
     <div className="list">
-      <ul>
+      <ul style={{}}>
         {items.map((item) => (
-          <Item key={item.id} item={item} />
+          <Item key={item.id} item={item} setItems={setItems}/>
         ))}
       </ul>
     </div>
   );
 }
 
-function Item({ item }) {
+function Item({ item, setItems }) {
+
+  function deleteItem(id) {
+    setItems((prevItems)=> prevItems.filter((item)=> item.id !== id))
+  }
+
   return (
     <li>
       <span style={item.packed ? { textDecoration: "line-through" } : {}}>
         {item.quantity} {item.description}
       </span>
-      <button>❌</button>
+      <button onClick={()=>{deleteItem(item.id)}}>❌</button>
     </li>
   );
 }
