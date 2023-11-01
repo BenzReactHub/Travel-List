@@ -4,6 +4,7 @@ const initialItems = [
   { id: 1, description: "Passports", quantity: 2, packed: false },
   { id: 2, description: "Socks", quantity: 12, packed: true },
   { id: 3, description: "Charger", quantity: 1, packed: false },
+  { id: 4, description: "Iphone", quantity: 15, packed: true },
 ];
 
 export default function App() {
@@ -63,14 +64,62 @@ function Form({ setItems }) {
     </form>
   );
 }
+
 function PackingList({ items, setItems }) {
+  const [sortBy, setSortBy] = useState("packed");
+  let sortedItems = [];
+
+  switch (sortBy) {
+    case "input":
+      sortedItems = items.slice().sort((a, b) => +a.quantity - +b.quantity);
+      break;
+    case "descrition":
+      // eslint-disable-next-line array-callback-return
+      sortedItems = items.slice().sort((a, b) => {
+        if (
+          String(a.description).toLowerCase() <
+          String(b.description).toLowerCase()
+        )
+          return -1;
+        if (
+          String(a.description).toLowerCase() >
+          String(b.description).toLowerCase()
+        )
+          return 1;
+      });
+      break;
+    case "packed":
+      // eslint-disable-next-line array-callback-return
+      sortedItems = items.slice().sort((a, b) => {
+        if (a.packed) return -1;
+        if (b.packed) return 1;
+      });
+      break;
+    default:
+      break;
+  }
+
+  console.log("render");
+
   return (
     <div className="list">
-      <ul style={{}}>
-        {items.map((item) => (
+      <ul>
+        {sortedItems.map((item) => (
           <Item key={item.id} item={item} setItems={setItems} />
         ))}
       </ul>
+      <div className="actions">
+        <select
+          value={sortBy}
+          onChange={(e) => {
+            setSortBy(e.target.value);
+          }}
+        >
+          <option value="input">Sort by input order</option>
+          <option value="descrition">Sort by description</option>
+          <option value="packed">Sort by packed status</option>
+        </select>
+      </div>
     </div>
   );
 }
